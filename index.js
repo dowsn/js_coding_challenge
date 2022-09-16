@@ -1,4 +1,35 @@
-let obj = {
+// update value
+const x =  {
+	"a.b[5dc0ad700000000000000000]": { "title": "asdf1-updated" }
+}
+
+// select one of the input objects and pass it as a param into the 
+//function at the end of this file to test the functionality
+
+let obj1 = {
+	a: {
+		b: [
+			{ _id: '5dc0ad700000000000000000', name: 'asdf1' },
+			{ _id: '5dc0ad700000000000000001', name: 'asdf2' },
+			{ _id: '5dc0ad700000000000000002', name: 'asdf3' }
+		]
+	},
+	value: 'hui'
+};
+  
+let obj2 = {
+	a: {
+		b: [
+			{ _id: '5dc0ad700000000000000000', name: 'asdf1' },
+			{ _id: '5dc0ad700000000000000001', name: 'asdf2' },
+			{ _id: '5dc0ad700000000000000002', name: 'asdf3' }
+		],
+		c: 'hallo'
+	},
+	value: 'hui'
+};
+  
+let obj3 = {
   a: {
     b: [
       { _id: '5dc0ad700000000000000000', name: 'asdf1' },
@@ -16,21 +47,26 @@ let obj = {
 	}
 };
 
+// the function for updating object with two arguments x (update)
+// and object to be updated
 
-function editObject(x) {
-// all x keys because there might be more than one
-
-
-const keys = Object.keys(x);
+function editObject(x, object) {
+// checking the input type in javascript
+if (typeof x !== 'object') {
+  console.log("Invalid input")
+  return "Invalid input"
+}
   
+let obj = object 
+// all x keys because there might be more than one
+const keys = Object.keys(x);
 // so I can parse through them
 for(let i = 0; i < keys.length; i++) {
-
 // value of respective key in x, we also don't want the value in JSON format
 const value = x[keys[i]];
 const key = keys[i]
  // is a.b
-    if(/^(a\.b)/.test(key)) {
+    if(/^(a\.b.)/.test(key)) {
       // and empty array, so there will be new object added specified by argument's 
       // value
       if(/(\[\])$/.test(key)) {
@@ -62,9 +98,9 @@ const key = keys[i]
     // this object
     if(/(\[.+\])\..+$/.test(key)) {
       // analysing the key to substruct ID and newKey value for update
-      const analysis = key.split('.')
-      const newKey = analysis[2];
-      let id = analysis[1].slice(2,-1);
+      const keyElements = key.split('.')
+      const newKey = keyElements[2];
+      let id = keyElements[1].slice(2,-1);
         // again testing if the id actually exists
            if(obj.a.b.find((e) => e._id ===id)) {
       // getting the object to update and updating it with the value
@@ -77,12 +113,9 @@ const key = keys[i]
       obj.a.b.push(update[0]);
     }
     }
-    console.log(obj.a.b)
 
-    return console.log(obj);
-    
-  }
-  // there is no a.b at the beginning from now on
+  } else {
+  // if there is no a.b at the beginning 
 
   // function for following operations
   // working with path in a string format and adding/updating on chosen path
@@ -116,7 +149,6 @@ const key = keys[i]
     delete toDelete[key];
     return object
 };
-   
       
   // there is empty array in the end meaning we will add a new object under certain path 
   // specified by the key
@@ -134,22 +166,15 @@ const key = keys[i]
    if(value === null){
       obj = deleteObjectProperty(obj, key)
 
-   } else if(key && value){
-
-    setObjectProperty(obj, key, value);
    } else {
-     return "Invalid input"
-   }
-}
+    setObjectProperty(obj, key, value);
    
+      }
+    }
+  }
 }
-  console.log(obj);
+console.log(obj);
 }
 
-const y = obj.a ? true : false
+editObject(x, obj3);
 
-const x =  {
-	"a.b[5dc0ad700000000000000000].titleValue": "asdf1-updated"
-}
-        
-editObject(x);
