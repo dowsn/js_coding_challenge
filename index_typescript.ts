@@ -1,4 +1,4 @@
-// update value
+// update value x
 type updateParam = {[key: string]: any} 
 const x: updateParam =  {
 	"x[]": "asdfX",
@@ -140,6 +140,7 @@ const key = keys[i]
     object[key] = value;
 };
 
+
   const deleteObjectProperty = (object: inputObject, path: string) => {
   	const parts: any[] = path.split('.');
     let toDelete
@@ -186,4 +187,5 @@ console.log(obj);
 return obj;
 };
 
+// caling the function
 editObject(x, obj3);

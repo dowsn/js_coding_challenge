@@ -1,4 +1,4 @@
-// update value
+// update value x
 const x =  {
 	"a.b[5dc0ad700000000000000000]": { "title": "asdf1-updated" }
 }
@@ -174,6 +174,8 @@ const key = keys[i]
   }
 }
 console.log(obj);
+return obj
 }
 
+// caling the function
 editObject(x, obj3);
