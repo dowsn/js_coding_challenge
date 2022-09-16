@@ -1,12 +1,25 @@
 // update value
-const x =  {
-	"a.b[5dc0ad700000000000000000]": { "title": "asdf1-updated" }
-}
+type updateParam = {[key: string]: any} 
+const x: updateParam =  {
+	"x[]": "asdfX",
+	"v.x[]": "asdfV",
+	"v.m.l": "asdf-val"
+};
 
 // select one of the input objects and pass it as a param into the 
 //function at the end of this file to test the functionality
 
-let obj1 = {
+type inputObject = {a: {b: {_id: string, title?: string, name?: string, [key: string]: any}[], c?: string, [key: string]: any}, value: string,
+  	images?: {
+		thumbnail?: string,
+		small?: string,
+		medium?: string,
+		large?: string,
+		xlarge?: string
+	},
+  [key: string]: any}
+
+let obj1: inputObject = {
 	a: {
 		b: [
 			{ _id: '5dc0ad700000000000000000', name: 'asdf1' },
@@ -17,7 +30,7 @@ let obj1 = {
 	value: 'hui'
 };
   
-let obj2 = {
+let obj2: inputObject = {
 	a: {
 		b: [
 			{ _id: '5dc0ad700000000000000000', name: 'asdf1' },
@@ -29,7 +42,7 @@ let obj2 = {
 	value: 'hui'
 };
   
-let obj3 = {
+let obj3: inputObject = {
   a: {
     b: [
       { _id: '5dc0ad700000000000000000', name: 'asdf1' },
@@ -50,18 +63,13 @@ let obj3 = {
 // the function for updating object with two arguments x (update)
 // and object to be updated
 
-function editObject(x, object) {
-// checking the input type in javascript
-if (typeof x !== 'object') {
-  console.log("Invalid input")
-  return "Invalid input"
-}
-  
-let obj = object 
+
+function editObject(x: updateParam, inputObject: inputObject): Object {
+let obj: inputObject = inputObject; 
 // all x keys because there might be more than one
-const keys = Object.keys(x);
+const keys: string[] = Object.keys(x);
 // so I can parse through them
-for(let i = 0; i < keys.length; i++) {
+for(let i: number = 0; i < keys.length; i++) {
 // value of respective key in x, we also don't want the value in JSON format
 const value = x[keys[i]];
 const key = keys[i]
@@ -98,7 +106,7 @@ const key = keys[i]
     // this object
     if(/(\[.+\])\..+$/.test(key)) {
       // analysing the key to substruct ID and newKey value for update
-      const keyElements = key.split('.')
+      const keyElements: string[] = key.split('.')
       const newKey = keyElements[2];
       let id = keyElements[1].slice(2,-1);
         // again testing if the id actually exists
@@ -121,10 +129,10 @@ const key = keys[i]
   // working with path in a string format and adding/updating on chosen path
   // of the object
   
-  const setObjectProperty = (object, path, value) => {
-  	const parts = path.split('.');
-  	const limit = parts.length - 1;
-	for (let i = 0; i < limit; ++i) {
+  const setObjectProperty = (object: inputObject, path:string, value: string | string[]) => {
+  	const parts: string[] = path.split('.');
+  	const limit: number = parts.length - 1;
+	for (let i: number = 0; i < limit; ++i) {
       	const key = parts[i];
     	object = object[key] ?? (object[key] = { });
     }
@@ -132,8 +140,8 @@ const key = keys[i]
     object[key] = value;
 };
 
-  const deleteObjectProperty = (object, path) => {
-  	const parts = path.split('.');
+  const deleteObjectProperty = (object: inputObject, path: string) => {
+  	const parts: any[] = path.split('.');
     let toDelete
     // in case we are on root
     if (parts.length === 1) {
@@ -149,13 +157,14 @@ const key = keys[i]
     delete toDelete[key];
     return object
 };
+   
       
   // there is empty array in the end meaning we will add a new object under certain path 
   // specified by the key
   if (/(\[\])$/.test(key)) {
 
   // setting the array that will be passed into the function
-        let array = [];
+        let array: string[] = [];
         array = [...array, value];
     setObjectProperty(obj, key.slice(0, -2), array);
   }
@@ -167,13 +176,14 @@ const key = keys[i]
       obj = deleteObjectProperty(obj, key)
 
    } else {
+
     setObjectProperty(obj, key, value);
-   
+   }
       }
     }
   }
-}
 console.log(obj);
-}
+return obj;
+};
 
 editObject(x, obj3);
